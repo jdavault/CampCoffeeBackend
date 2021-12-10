@@ -16,7 +16,7 @@ const fs = require('fs');
 
 const port = normalizePort(process.env.PORT || '80');
 app.set('port', port);
-app.set('secPort', 0 + 443);
+app.set('secPort', 443);
 
 /**
  * Create HTTP server.
@@ -40,19 +40,14 @@ sudo cp -R /etc/letsencrypt/live/dev1.p3solutionsgroup.com ~/code/NucampFolder/P
 ~/
  */
 
+// LETS ENCRYPTED public valid key and cert
 const options = {
   key: fs.readFileSync('/etc/letsencrypt/live/dev1.p3solutionsgroup.com/privkey.pem'),
   cert: fs.readFileSync('/etc/letsencrypt/live/dev1.p3solutionsgroup.com/fullchain.pem'),
   allowHTTP1: true,
 };
 
-
-// const options = {
-//   key: fs.readFileSync(__dirname + '/dev1.p3solutionsgroup.com/privkey.pem'),
-//   cert: fs.readFileSync(__dirname + '/dev1.p3solutionsgroup.com/fullchain.pem'),
-//   allowHTTP1: true,
-// };
-
+// openSSL Self-signed key and cert
 // const options = {
 //   key: fs.readFileSync(__dirname + '/server.key'),
 //   cert: fs.readFileSync(__dirname + '/server.cert')

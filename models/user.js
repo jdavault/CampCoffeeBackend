@@ -18,6 +18,7 @@ const userSchema = new Schema({
   }
 });
 
+//addes username and password along with salting and hashing PW
 userSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('User', userSchema);
