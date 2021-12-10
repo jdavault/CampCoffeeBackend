@@ -16,7 +16,7 @@ coffeeCategoryRouter.route('/')
       })
       .catch(err => next(err));
   })
-  .post(cors.corsWithOptions, (req, res, next) => {
+  .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     CoffeeCategoryAccess.create(req.body)
       .then(coffeeCategory => {
         console.log('CoffeeCategory Created ', coffeeCategory);
@@ -30,7 +30,7 @@ coffeeCategoryRouter.route('/')
     res.statusCode = 403;
     res.end('PUT operation not supported on /coffeeCategorys');
   })
-  .delete(cors.corsWithOptions, (req, res, next) => {
+  .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     CoffeeCategoryAccess.deleteMany()
       .then(response => {
         res.statusCode = 200;
@@ -51,11 +51,11 @@ coffeeCategoryRouter.route('/:coffeeCategoryId')
       })
       .catch(err => next(err));
   })
-  .post(cors.corsWithOptions, authenticate.verifyUser, (req, res) => {
+  .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
     res.statusCode = 403;
     res.end(`POST operation not supported on /coffeeCategorys/${req.params.coffeeCategoryId}`);
   })
-  .put(cors.corsWithOptions, (req, res, next) => {
+  .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     CoffeeCategoryAccess.findByIdAndUpdate(req.params.coffeeCategoryId, {
       $set: req.body
     }, { new: true })
@@ -66,7 +66,7 @@ coffeeCategoryRouter.route('/:coffeeCategoryId')
       })
       .catch(err => next(err));
   })
-  .delete(cors.corsWithOptions, (req, res, next) => {
+  .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     CoffeeCategoryAccess.findByIdAndDelete(req.params.coffeeCategoryId)
       .then(response => {
         res.statusCode = 200;

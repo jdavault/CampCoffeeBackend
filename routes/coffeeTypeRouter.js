@@ -16,7 +16,7 @@ coffeeTypeRouter.route('/')
       })
       .catch(err => next(err));
   })
-  .post(cors.corsWithOptions, (req, res, next) => {
+  .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     CoffeeType.create(req.body)
       .then(coffeeType => {
         console.log('CoffeeType Created ', coffeeType);
@@ -30,7 +30,7 @@ coffeeTypeRouter.route('/')
     res.statusCode = 403;
     res.end('PUT operation not supported on /coffeeTypes');
   })
-  .delete(cors.corsWithOptions, (req, res, next) => {
+  .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     CoffeeType.deleteMany()
       .then(response => {
         res.statusCode = 200;
@@ -41,7 +41,7 @@ coffeeTypeRouter.route('/')
   });
 
 coffeeTypeRouter.route('/:coffeeTypeId')
-  .options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
+  .options(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => res.sendStatus(200))
   .get(cors.cors, (req, res, next) => {
     CoffeeType.findById(req.params.coffeeTypeId)
       .then(coffeeType => {
@@ -51,11 +51,11 @@ coffeeTypeRouter.route('/:coffeeTypeId')
       })
       .catch(err => next(err));
   })
-  .post(cors.corsWithOptions, authenticate.verifyUser, (req, res) => {
+  .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
     res.statusCode = 403;
     res.end(`POST operation not supported on /coffeeTypes/${req.params.coffeeTypeId}`);
   })
-  .put(cors.corsWithOptions, (req, res, next) => {
+  .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     CoffeeType.findByIdAndUpdate(req.params.coffeeTypeId, {
       $set: req.body
     }, { new: true })
@@ -66,7 +66,7 @@ coffeeTypeRouter.route('/:coffeeTypeId')
       })
       .catch(err => next(err));
   })
-  .delete(cors.corsWithOptions, (req, res, next) => {
+  .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     CoffeeType.findByIdAndDelete(req.params.coffeeTypeId)
       .then(response => {
         res.statusCode = 200;

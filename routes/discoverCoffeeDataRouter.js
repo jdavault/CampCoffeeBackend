@@ -16,7 +16,7 @@ discoverCoffeeDataRouter.route('/')
       })
       .catch(err => next(err));
   })
-  .post(cors.corsWithOptions, (req, res, next) => {
+  .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     DiscoverCoffeeData.create(req.body)
       .then(discoverCoffeeData => {
         console.log('DiscoverCoffeeData Created ', discoverCoffeeData);
@@ -30,7 +30,7 @@ discoverCoffeeDataRouter.route('/')
     res.statusCode = 403;
     res.end('PUT operation not supported on /discoverCoffeeDatas');
   })
-  .delete(cors.corsWithOptions, (req, res, next) => {
+  .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     DiscoverCoffeeData.deleteMany()
       .then(response => {
         res.statusCode = 200;
@@ -55,7 +55,7 @@ discoverCoffeeDataRouter.route('/:discoverCoffeeDataId')
     res.statusCode = 403;
     res.end(`POST operation not supported on /discoverCoffeeDatas/${req.params.discoverCoffeeDataId}`);
   })
-  .put(cors.corsWithOptions, (req, res, next) => {
+  .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     DiscoverCoffeeData.findByIdAndUpdate(req.params.discoverCoffeeDataId, {
       $set: req.body
     }, { new: true })
@@ -66,7 +66,7 @@ discoverCoffeeDataRouter.route('/:discoverCoffeeDataId')
       })
       .catch(err => next(err));
   })
-  .delete(cors.corsWithOptions, (req, res, next) => {
+  .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     DiscoverCoffeeData.findByIdAndDelete(req.params.discoverCoffeeDataId)
       .then(response => {
         res.statusCode = 200;

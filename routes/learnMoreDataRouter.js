@@ -16,7 +16,7 @@ learnMoreDataRouter.route('/')
       })
       .catch(err => next(err));
   })
-  .post(cors.corsWithOptions, (req, res, next) => {
+  .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     LearnMoreDataAccess.create(req.body)
       .then(learnMoreData => {
         console.log('LearnMoreData Created ', learnMoreData);
@@ -30,7 +30,7 @@ learnMoreDataRouter.route('/')
     res.statusCode = 403;
     res.end('PUT operation not supported on /learnMoreDatas');
   })
-  .delete(cors.corsWithOptions, (req, res, next) => {
+  .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     LearnMoreDataAccess.deleteMany()
       .then(response => {
         res.statusCode = 200;
@@ -41,7 +41,7 @@ learnMoreDataRouter.route('/')
   });
 
 learnMoreDataRouter.route('/:learnMoreDataId')
-  .options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
+  .options(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => res.sendStatus(200))
   .get(cors.cors, (req, res, next) => {
     LearnMoreDataAccess.findById(req.params.learnMoreDataId)
       .then(learnMoreData => {
@@ -55,7 +55,7 @@ learnMoreDataRouter.route('/:learnMoreDataId')
     res.statusCode = 403;
     res.end(`POST operation not supported on /learnMoreDatas/${req.params.learnMoreDataId}`);
   })
-  .put(cors.corsWithOptions, (req, res, next) => {
+  .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     LearnMoreDataAccess.findByIdAndUpdate(req.params.learnMoreDataId, {
       $set: req.body
     }, { new: true })
@@ -66,7 +66,7 @@ learnMoreDataRouter.route('/:learnMoreDataId')
       })
       .catch(err => next(err));
   })
-  .delete(cors.corsWithOptions, (req, res, next) => {
+  .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     LearnMoreDataAccess.findByIdAndDelete(req.params.learnMoreDataId)
       .then(response => {
         res.statusCode = 200;
